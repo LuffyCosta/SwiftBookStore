@@ -63,7 +63,18 @@
                             <outlet property="delegate" destination="mPX-4u-bY8" id="OkE-Af-Q7H"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Lista de Livros iOS" id="x3j-2m-MQJ"/>
+                    <navigationItem key="navigationItem" title="Lista de Livros iOS" id="x3j-2m-MQJ">
+                        <barButtonItem key="rightBarButtonItem" title="Filtrar" style="plain" id="M0w-lR-79C">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="a0T-tq-RXG">
+                                <rect key="frame" x="276" y="7" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Filtrar"/>
+                                <connections>
+                                    <action selector="tappedFilterButton:" destination="mPX-4u-bY8" eventType="touchUpInside" id="VaJ-fO-HFF"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="booksCollection" destination="YkG-cz-qIn" id="aUs-P7-geQ"/>
                         <segue destination="WGM-8j-NwH" kind="show" identifier="showDetail" id="WTJ-wx-fdL"/>

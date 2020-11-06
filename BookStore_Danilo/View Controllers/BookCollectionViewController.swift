@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 private let reuseIdentifier = "Cell"
 
@@ -13,9 +14,15 @@ class BookCollectionViewController: UICollectionViewController,UICollectionViewD
     @IBOutlet var booksCollection: UICollectionView!
     var searchData: [BookModel] = []
     var selectedIndexpath = 0
+    var favoriteBooks: [NSManagedObject] = []
+    var isListFilterd = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchDataForScreen()
+    }
+    
+    func fetchDataForScreen(){
         BookDataManager.sharedInstance.goGetBooks(completion:{
                 array in
                 self.searchData = array
@@ -30,6 +37,52 @@ class BookCollectionViewController: UICollectionViewController,UICollectionViewD
         }
      }
     
+    @IBAction func tappedFilterButton(_ sender: Any) {
+        if isListFilterd {
+            fetchDataForScreen()
+            isListFilterd = false
+        } else {
+            filterArray()
+            isListFilterd = true
+        }
+    }
+    
+    func filterArray(){
+        var filteredBook : [BookModel] = []
+        fetchDataFromFavorites()
+        for book in self.searchData {
+            for favBook in favoriteBooks {
+                if book.id == favBook.value(forKey: "bookId") as? String {
+                    filteredBook.append(book)
+                    break
+                }
+            }
+            if filteredBook.count == favoriteBooks.count {
+                break
+            }
+        }
+        self.searchData = filteredBook
+        configureCollectionView()
+    }
+    
+    func fetchDataFromFavorites(){
+        guard let appDelegate =
+           UIApplication.shared.delegate as? AppDelegate else {
+             return
+         }
+         
+         let managedContext =
+           appDelegate.persistentContainer.viewContext
+         
+         let fetchRequest =
+           NSFetchRequest<NSManagedObject>(entityName: "FavoriteBooks")
+         
+         do {
+            favoriteBooks = try managedContext.fetch(fetchRequest)
+         } catch let error as NSError {
+           print("Could not fetch. \(error), \(error.userInfo)")
+         }
+    }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         self.searchData.count
